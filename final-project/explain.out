@@ -1,0 +1,18 @@
+imdb=> explain select title_id from title_basics where upper(primary_title) = 'TOY STORY';
+                                       QUERY PLAN
+----------------------------------------------------------------------------------------
+ Bitmap Heap Scan on title_basics  (cost=618.41..42587.94 rows=22432 width=10)
+   Recheck Cond: (upper((primary_title)::text) = 'TOY STORY'::text)
+   ->  Bitmap Index Scan on primary_title_index  (cost=0.00..612.80 rows=22432 width=0)
+         Index Cond: (upper((primary_title)::text) = 'TOY STORY'::text)
+(4 rows)
+
+imdb=> explain select title_id from title_basics where upper(primary_title) = 'TOY STORY' and title_type != 'tvEpisode';
+
+                                                     QUERY PLAN
+--------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on title_basics  (cost=211.97..21201.02 rows=7683 width=10)
+   Recheck Cond: ((upper((primary_title)::text) = 'TOY STORY'::text) AND ((title_type)::text <> 'tvEpisode'::text))
+   ->  Bitmap Index Scan on title_idx_no_tv  (cost=0.00..210.05 rows=7683 width=0)
+         Index Cond: (upper((primary_title)::text) = 'TOY STORY'::text)
+(4 rows)
