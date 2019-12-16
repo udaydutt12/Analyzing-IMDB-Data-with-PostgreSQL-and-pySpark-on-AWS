@@ -1,3 +1,0 @@
-select count(movielens_rating) from title_ratings;
-
-26687
